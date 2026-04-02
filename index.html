@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artificial Ignorance — AI Infrastructure for Business</title>
+  <meta name="description" content="We build the AI brain behind your business. AI Voice, CRM integration, and intelligent agents that know your company inside out.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:          #00C853;
+      --green-dim:      rgba(0,200,83,0.10);
+      --green-glow:     rgba(0,200,83,0.25);
+      --green-border:   rgba(0,200,83,0.30);
+      --bg:             #FFFFFF;
+      --bg-2:           #F7F7F7;
+      --bg-3:           #EFEFEF;
+      --text:           #0A0A0F;
+      --text-muted:     #6B6B75;
+      --border:         rgba(0,0,0,0.09);
+      --font-display:   'Barlow Condensed', sans-serif;
+      --font-body:      'DM Sans', sans-serif;
+      --font-ui:        'Barlow', sans-serif;
+      --radius:         14px;
+      --gutter:         clamp(1.25rem,5vw,3.5rem);
+      --carl-color:     #2979FF;
+      --mike-color:     #00C853;
+      --penny-color:    #FFD600;
+      --sherlock-color: #AB47BC;
+      --rosa-color:     #F50057;
+      --eva-color:      #00BFA5;
+    }
+    html { scroll-behavior: smooth; }
+    body { background:var(--bg); color:var(--text); font-family:var(--font-body); font-size:16px; line-height:1.65; overflow-x:hidden; }
+    ::-webkit-scrollbar { width:3px; }
+    ::-webkit-scrollbar-track { background:var(--bg); }
+    ::-webkit-scrollbar-thumb { background:var(--green); border-radius:2px; }
+    ::selection { background:var(--green); color:var(--bg); }
+
+    .container { max-width:1200px; margin:0 auto; padding:0 var(--gutter); }
+    .section    { padding:clamp(5rem,10vw,8rem) 0; }
+
+    .label {
+      display:inline-flex; align-items:center; gap:.45rem;
+      font-family:var(--font-ui); font-size:.68rem; font-weight:700;
+      letter-spacing:.22em; text-transform:uppercase; color:var(--green);
+    }
+    .label::before { content:'▸'; font-size:.55rem; }
+
+    .btn {
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.9rem 2rem; border-radius:8px;
+      font-family:var(--font-ui); font-size:.8rem; font-weight:700;
+      letter-spacing:.1em; text-transform:uppercase;
+      text-decoration:none; cursor:pointer; border:none;
+      transition:all .22s ease;
+    }
+    .btn-primary { background:var(--green); color:var(--bg); }
+    .btn-primary:hover { background:#00A843; transform:translateY(-2px); box-shadow:0 10px 30px var(--green-glow); }
+    .btn-outline  { background:transparent; color:var(--text); border:1px solid var(--border); }
+    .btn-outline:hover { border-color:var(--green); color:var(--green); transform:translateY(-2px); }
+
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .65s ease,transform .65s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ════════════════ NAV ════════════════ */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      padding:1rem var(--gutter);
+      display:flex; align-items:center; justify-content:space-between;
+      transition:background .3s,backdrop-filter .3s,border-color .3s;
+      border-bottom:1px solid transparent;
+    }
+    nav.scrolled { background:rgba(255,255,255,.95); backdrop-filter:blur(18px); border-color:var(--border); box-shadow:0 1px 16px rgba(0,0,0,.08); }
+    .nav-logo img { height:34px; width:auto; display:block; }
+    .nav-links { display:flex; align-items:center; gap:2rem; list-style:none; }
+    .nav-links a { color:var(--text-muted); text-decoration:none; font-family:var(--font-ui); font-size:.7rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; transition:color .2s; }
+    .nav-links a:hover { color:var(--green); }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+    .hamburger span { display:block; width:22px; height:2px; background:var(--text); transition:all .3s; border-radius:2px; }
+
+    /* ════════════════ MOBILE MENU ════════════════ */
+    .mobile-menu {
+      position:fixed; inset:0; background:var(--bg); z-index:199;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2rem;
+      transform:translateX(100%); transition:transform .35s cubic-bezier(.4,0,.2,1);
+    }
+    .mobile-menu.open { transform:translateX(0); }
+    .mobile-menu a { font-family:var(--font-display); font-size:2.5rem; font-weight:900; color:var(--text); text-decoration:none; transition:color .2s; }
+    .mobile-menu a:hover { color:var(--green); }
+    .mobile-close { position:absolute; top:1.5rem; right:var(--gutter); background:none; border:none; color:var(--text-muted); font-size:.8rem; cursor:pointer; letter-spacing:.1em; font-family:var(--font-body); }
+
+    /* ════════════════ HERO ════════════════ */
+    #hero { position:relative; min-height:100vh; display:flex; align-items:center; overflow:hidden; }
+    #hero-canvas { position:absolute; inset:0; width:100%; height:100%; opacity:.45; }
+    #hero::after {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse 70% 60% at 30% 55%, rgba(0,200,83,.07) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .hero-inner { position:relative; z-index:2; padding-top:9rem; padding-bottom:7rem; width:100%; }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:.6rem;
+      background:var(--green-dim); border:1px solid var(--green-border);
+      border-radius:100px; padding:.45rem 1.1rem;
+      font-family:var(--font-ui); font-size:.68rem; font-weight:700;
+      letter-spacing:.18em; text-transform:uppercase; color:var(--green);
+      margin-bottom:2rem; animation:fadeUp .8s ease both;
+    }
+    .hero-h1 { font-family:var(--font-display); font-weight:900; font-size:clamp(3.8rem,9.5vw,9rem); line-height:.92; letter-spacing:-.01em; margin-bottom:1.75rem; animation:fadeUp .8s .08s ease both; }
+    .hero-h1 .line-solid  { display:block; color:var(--text); }
+    .hero-h1 .line-green  { display:block; color:var(--green); text-shadow:0 0 80px rgba(0,200,83,.5); }
+    .hero-h1 .line-outline{ display:block; -webkit-text-stroke:2px rgba(10,10,15,.18); color:transparent; }
+    .hero-sub { font-size:clamp(1rem,1.6vw,1.15rem); color:var(--text-muted); max-width:500px; margin-bottom:2.5rem; line-height:1.75; animation:fadeUp .8s .16s ease both; }
+    .hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; animation:fadeUp .8s .24s ease both; }
+    .hero-deco { position:absolute; right:6%; top:50%; transform:translateY(-50%); width:clamp(260px,30vw,480px); pointer-events:none; animation:floatDeco 5s ease-in-out infinite; z-index:1; filter:drop-shadow(0 30px 60px rgba(0,200,83,.2)); }
+
+    .hero-stats {
+      position:absolute; bottom:0; left:0; right:0; z-index:2;
+      border-top:1px solid var(--border);
+      display:grid; grid-template-columns:repeat(4,1fr);
+      background:rgba(255,255,255,.90); backdrop-filter:blur(12px);
+      animation:fadeUp .8s .4s ease both;
+    }
+    .hero-stat { padding:1.5rem 2rem; border-right:1px solid var(--border); }
+    .hero-stat:last-child { border-right:none; }
+    .stat-num   { font-family:var(--font-display); font-size:2.2rem; font-weight:900; color:var(--green); line-height:1; }
+    .stat-label { font-family:var(--font-ui); font-size:.65rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); margin-top:.2rem; }
+
+    /* ════════════════ MARQUEE ════════════════ */
+    .marquee-wrap { background:var(--green); overflow:hidden; padding:.9rem 0; white-space:nowrap; }
+    .marquee-track { display:inline-flex; align-items:center; animation:marquee 32s linear infinite; }
+    .marquee-item { display:inline-flex; align-items:center; padding:0 2.5rem; gap:2.5rem; }
+    .marquee-item img { height:28px; width:auto; display:block; filter:brightness(0) invert(1); opacity:.9; }
+    .marquee-dot  { width:5px; height:5px; background:rgba(0,0,0,.3); border-radius:50%; flex-shrink:0; }
+
+    /* ════════════════ PROBLEM ════════════════ */
+    #problem { background:var(--bg-2); }
+    .problem-grid { display:grid; grid-template-columns:1fr 1.1fr; gap:5rem; align-items:center; }
+    .problem-h2 { font-family:var(--font-display); font-weight:900; font-size:clamp(2.8rem,5vw,4.5rem); line-height:.95; margin-top:1.5rem; }
+    .problem-h2 em { font-style:normal; color:var(--green); }
+    .problem-body { color:var(--text-muted); font-size:.9rem; line-height:1.8; margin-top:1.5rem; max-width:380px; }
+    .problem-cards { display:flex; flex-direction:column; gap:1.25rem; }
+    .problem-card { display:flex; gap:1.25rem; align-items:flex-start; padding:1.5rem; background:var(--bg-3); border:1px solid var(--border); border-radius:var(--radius); transition:border-color .25s; }
+    .problem-card:hover { border-color:var(--green-border); }
+    .pc-icon  { width:2.75rem; height:2.75rem; flex-shrink:0; object-fit:contain; }
+    .pc-title { font-family:var(--font-ui); font-size:.95rem; font-weight:700; margin-bottom:.3rem; }
+    .pc-desc  { font-size:.8rem; color:var(--text-muted); line-height:1.65; }
+
+    /* ════════════════ SOLUTION ════════════════ */
+    #solution { background:var(--bg); position:relative; overflow:hidden; }
+    #solution::before { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:700px; background:radial-gradient(circle, rgba(0,200,83,.05) 0%, transparent 65%); pointer-events:none; }
+    .sol-header { text-align:center; margin-bottom:4.5rem; }
+    .sol-h2 { font-family:var(--font-display); font-weight:900; font-size:clamp(2.8rem,5vw,4.5rem); line-height:.95; margin-top:1rem; }
+    .sol-h2 span { color:var(--green); }
+    .sol-sub { color:var(--text-muted); font-size:.9rem; max-width:560px; margin:1.25rem auto 0; line-height:1.75; }
+    .flow { display:flex; align-items:stretch; justify-content:center; flex-wrap:nowrap; overflow-x:auto; padding-bottom:1rem; }
+    .flow-node { flex:1; min-width:140px; max-width:190px; background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius); padding:2rem 1.25rem; display:flex; flex-direction:column; align-items:center; text-align:center; gap:.75rem; transition:all .28s; position:relative; z-index:1; }
+    .flow-node:hover { border-color:var(--green-border); transform:translateY(-5px); box-shadow:0 16px 48px rgba(0,0,0,.35); }
+    .flow-node.is-brain { flex:1.3; min-width:180px; background:linear-gradient(160deg,rgba(0,200,83,.09) 0%,rgba(0,200,83,.02) 100%); border-color:var(--green-border); }
+    .flow-node.is-brain .node-emoji { animation:pulseBrain 2.5s ease-in-out infinite; }
+    .flow-arrow { display:flex; align-items:center; padding:0 .5rem; color:var(--green); font-size:1.4rem; flex-shrink:0; align-self:center; }
+    .node-emoji { font-size:2.2rem; }
+    .node-title { font-family:var(--font-display); font-size:1rem; font-weight:800; }
+    .node-desc  { font-size:.68rem; color:var(--text-muted); line-height:1.5; }
+    .node-tags  { display:flex; flex-wrap:wrap; gap:.35rem; justify-content:center; margin-top:.25rem; }
+    .node-tag   { background:rgba(0,0,0,.06); border:1px solid var(--border); border-radius:100px; padding:.2rem .55rem; font-size:.58rem; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); }
+
+    /* ════════════════ MEET THE MONKEYS ════════════════ */
+    #agents { background:var(--bg-2); }
+    .agents-header { display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; margin-bottom:3rem; }
+    .agents-h2 { font-family:var(--font-display); font-weight:900; font-size:clamp(2.8rem,5vw,4.5rem); line-height:1; margin-top:.75rem; }
+    .agents-note { font-size:.8rem; color:var(--text-muted); max-width:280px; text-align:right; line-height:1.7; }
+    .agents-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+    .agent-card { background:var(--bg-3); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column; transition:all .3s ease; }
+    .agent-card:hover { transform:translateY(-5px); box-shadow:0 20px 60px rgba(0,0,0,.4); border-color:var(--card-color,var(--green)); }
+
+    /* Full image display */
+    .card-img-wrap { position:relative; overflow:hidden; background:var(--card-bg,#111); flex-shrink:0; }
+    .card-img-wrap img { width:100%; height:100%; object-fit:contain; object-position:center bottom; display:block; transition:transform .5s ease; }
+    .agent-card:hover .card-img-wrap img { transform:scale(1.03); }
+    .card-color-bar { position:absolute; bottom:0; left:0; right:0; height:4px; background:var(--card-color,var(--green)); }
+
+    .card-body { padding:1.5rem; flex:1; display:flex; flex-direction:column; gap:.75rem; }
+    .card-badge { display:inline-block; background:var(--card-badge-bg,rgba(0,200,83,.1)); border:1px solid var(--card-badge-border,rgba(0,200,83,.3)); border-radius:100px; padding:.2rem .7rem; font-family:var(--font-ui); font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--card-color,var(--green)); align-self:flex-start; }
+    .card-name { font-family:var(--font-display); font-size:2rem; font-weight:900; line-height:1; }
+    .card-role { font-family:var(--font-ui); font-size:.72rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); }
+    .card-desc { font-size:.82rem; color:var(--text-muted); line-height:1.7; }
+    .card-tasks { display:flex; flex-direction:column; gap:.45rem; margin-top:auto; padding-top:1rem; border-top:1px solid var(--border); }
+    .card-task  { display:flex; align-items:center; gap:.6rem; font-size:.75rem; color:var(--text-muted); }
+    .card-task::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--card-color,var(--green)); flex-shrink:0; }
+
+    /* EVA spans full width */
+    .agent-card.card-eva { grid-column:span 3; }
+    .card-eva-inner { display:grid; grid-template-columns:320px 1fr; }
+    .card-eva-inner .card-img-wrap { height:380px; border-radius:0; }
+    .card-eva-right { display:grid; grid-template-columns:1fr 1fr; gap:2rem; padding:2rem 2rem 2rem 0; }
+    .card-eva-right .card-body { padding:0; }
+    .card-eva-tasks { padding:0; display:flex; flex-direction:column; gap:.6rem; justify-content:center; }
+
+    /* ════════════════ AGENT PLAYBOOK ════════════════ */
+    #playbook { background:var(--bg); }
+    .playbook-header { text-align:center; margin-bottom:3.5rem; }
+    .playbook-h2 { font-family:var(--font-display); font-weight:900; font-size:clamp(2.8rem,5vw,4.5rem); line-height:.95; margin-top:.75rem; }
+    .playbook-h2 span { color:var(--green); }
+    .playbook-sub { color:var(--text-muted); font-size:.9rem; max-width:540px; margin:1.25rem auto 0; line-height:1.75; }
+
+    /* Tab nav */
+    .ptabs-nav {
+      display:flex; gap:.75rem; flex-wrap:wrap; justify-content:center;
+      margin-bottom:2.5rem; padding-bottom:2rem;
+      border-bottom:1px solid var(--border);
+    }
+    .ptab-btn {
+      display:flex; align-items:center; gap:.65rem;
+      padding:.65rem 1.25rem; border-radius:100px;
+      background:var(--bg-2); border:1px solid var(--border);
+      cursor:pointer; transition:all .22s;
+      font-family:var(--font-ui); font-size:.75rem; font-weight:700;
+      letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted);
+    }
+    .ptab-btn img { width:2.25rem; height:2.25rem; border-radius:50%; object-fit:cover; flex-shrink:0; }
+    .ptab-btn:hover { border-color:var(--tab-color); color:var(--tab-color); }
+    .ptab-btn.active { background:var(--tab-color); color:var(--bg); border-color:var(--tab-color); font-weight:800; }
+    .ptab-btn.active img { filter:brightness(0) invert(1); }
+
+    /* Tab panels */
+    .ptab-panel { display:none; }
+    .ptab-panel.active { display:grid; grid-template-columns:280px 1fr; gap:2.5rem; align-items:start; }
+
+    .panel-img-col { position:sticky; top:6rem; }
+    .panel-img-wrap { border-radius:var(--radius); overflow:hidden; background:var(--panel-bg,#111); border:1px solid var(--panel-border,var(--border)); }
+    .panel-img-wrap img { width:100%; display:block; object-fit:contain; }
+    .panel-agent-name { font-family:var(--font-display); font-size:2.5rem; font-weight:900; margin-top:1rem; line-height:1; }
+    .panel-agent-role { font-family:var(--font-ui); font-size:.72rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--text-muted); margin-top:.3rem; }
+
+    .panel-content { display:flex; flex-direction:column; gap:2rem; }
+
+    /* Workflow steps */
+    .pflow-title { font-family:var(--font-ui); font-size:.68rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--panel-color,var(--green)); margin-bottom:1.25rem; display:flex; align-items:center; gap:.5rem; }
+    .pflow-title::before { content:''; flex:1; height:1px; background:var(--border); }
+    .pflow-steps { display:flex; flex-direction:column; gap:.75rem; }
+    .pflow-step { display:flex; gap:1rem; align-items:flex-start; }
+    .pflow-num { width:2rem; height:2rem; border-radius:50%; background:var(--panel-color-dim,rgba(0,200,83,.12)); border:1px solid var(--panel-color-border,rgba(0,200,83,.3)); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:.9rem; font-weight:900; color:var(--panel-color,var(--green)); flex-shrink:0; }
+    .pflow-text { font-size:.82rem; color:var(--text-muted); line-height:1.65; padding-top:.15rem; }
+    .pflow-text strong { color:var(--text); font-weight:600; }
+
+    /* Problems + ROI row */
+    .panel-bottom { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+
+    .panel-card { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; }
+    .panel-card-title { font-family:var(--font-ui); font-size:.68rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--panel-color,var(--green)); margin-bottom:1.25rem; }
+
+    .prob-item { display:flex; gap:.75rem; margin-bottom:1rem; align-items:flex-start; }
+    .prob-icon { font-size:1.1rem; flex-shrink:0; margin-top:.1rem; }
+    .prob-text { font-size:.8rem; color:var(--text-muted); line-height:1.6; }
+    .prob-text strong { color:var(--text); display:block; font-size:.82rem; margin-bottom:.1rem; font-weight:600; }
+
+    .roi-item { display:flex; flex-direction:column; gap:.25rem; padding:.9rem 0; border-bottom:1px solid var(--border); }
+    .roi-item:last-child { border-bottom:none; padding-bottom:0; }
+    .roi-num { font-family:var(--font-display); font-size:2rem; font-weight:900; color:var(--panel-color,var(--green)); line-height:1; }
+    .roi-label { font-family:var(--font-ui); font-size:.72rem; font-weight:600; color:var(--text-muted); letter-spacing:.05em; }
+    .roi-note  { font-size:.68rem; color:var(--text-muted); opacity:.7; }
+
+    /* ════════════════ HOW IT WORKS ════════════════ */
+    #how { background:var(--bg-2); }
+    .how-header { text-align:center; margin-bottom:5rem; }
+    .how-h2 { font-family:var(--font-display); font-weight:900; font-size:clamp(2.8rem,5vw,4.5rem); line-height:.95; margin-top:.75rem; }
+    .how-h2 span { color:var(--green); }
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; position:relative; }
+    .steps::before { content:''; position:absolute; top:2.6rem; left:calc(16.66% + 2rem); right:calc(16.66% + 2rem); height:1px; background:repeating-linear-gradient(90deg,var(--green) 0,var(--green) 6px,transparent 6px,transparent 16px); opacity:.3; }
+    .step { display:flex; flex-direction:column; align-items:center; text-align:center; padding:2rem; }
+    .step-circle { width:5rem; height:5rem; border-radius:50%; border:2px solid var(--green-border); background:var(--bg-3); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1.5rem; font-weight:900; color:var(--green); margin-bottom:1.75rem; position:relative; z-index:1; transition:all .3s; }
+    .step:hover .step-circle { background:var(--green); color:var(--bg); border-color:var(--green); box-shadow:0 0 30px var(--green-glow); }
+    .step-icon  { font-size:2.5rem; margin-bottom:1.25rem; }
+    .step-title { font-family:var(--font-display); font-size:1.4rem; font-weight:800; margin-bottom:.75rem; }
+    .step-desc  { font-size:.82rem; color:var(--text-muted); line-height:1.75; }
+
+    /* ════════════════ FINANCIAL IMPACT ════════════════ */
+    #roi { background:var(--bg); position:relative; overflow:hidden; }
+    #roi::before { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:800px; height:800px; background:radial-gradient(circle,rgba(0,200,83,.04) 0%,transparent 65%); pointer-events:none; }
+    .roi-header { text-align:center; margin-bottom:4rem; }
+    .roi-h2 { font-family:var(--font-display); font-weight:900; font-size:clamp(2.8rem,5vw,4.5rem); line-height:.95; margin-top:.75rem; }
+    .roi-h2 span { color:var(--green); }
+    .roi-sub { color:var(--text-muted); font-size:.9rem; max-width:540px; margin:1.25rem auto 0; line-height:1.75; }
+
+    /* Big headline number */
+    .roi-hero-num {
+      text-align:center; margin-bottom:4rem;
+      padding:3rem 2rem;
+      background:linear-gradient(160deg,rgba(0,200,83,.08) 0%,rgba(0,200,83,.02) 100%);
+      border:1px solid var(--green-border); border-radius:var(--radius);
+    }
+    .roi-hero-value { font-family:var(--font-display); font-size:clamp(5rem,12vw,10rem); font-weight:900; color:var(--green); line-height:.9; text-shadow:0 0 80px rgba(0,200,83,.4); }
+    .roi-hero-label { font-family:var(--font-ui); font-size:1rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--text-muted); margin-top:1rem; }
+    .roi-hero-sub { font-size:.8rem; color:var(--text-muted); margin-top:.5rem; }
+
+    /* Comparison table */
+    .comparison { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:3rem; }
+    .comp-col { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .comp-col.comp-ai { border-color:var(--green-border); background:linear-gradient(160deg,rgba(0,200,83,.06) 0%,var(--bg-2) 60%); }
+    .comp-head { padding:1.5rem 2rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem; }
+    .comp-head-title { font-family:var(--font-display); font-size:1.3rem; font-weight:900; }
+    .comp-head-sub   { font-size:.72rem; color:var(--text-muted); margin-top:.2rem; }
+    .comp-head-icon  { font-size:2rem; }
+    .comp-row { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; border-bottom:1px solid var(--border); }
+    .comp-row:last-child { border-bottom:none; }
+    .comp-row-label { font-size:.8rem; color:var(--text-muted); }
+    .comp-row-val   { font-family:var(--font-display); font-size:1.1rem; font-weight:800; }
+    .comp-row-val.good { color:var(--green); }
+    .comp-row-val.bad  { color:#FF5252; }
+
+    /* Per-agent savings grid */
+    .savings-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; margin-bottom:3rem; }
+    .savings-card {
+      background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem;
+      display:flex; flex-direction:column; gap:.75rem; transition:all .25s;
+    }
+    .savings-card:hover { border-color:var(--sc-color,var(--green)); transform:translateY(-3px); }
+    .savings-agent { display:flex; align-items:center; gap:.75rem; }
+    .savings-thumb { width:3rem; height:3rem; border-radius:50%; object-fit:cover; flex-shrink:0; }
+    .savings-name  { font-family:var(--font-display); font-size:1.3rem; font-weight:900; line-height:1; }
+    .savings-role  { font-size:.65rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.1em; font-family:var(--font-ui); font-weight:600; }
+    .savings-amount { font-family:var(--font-display); font-size:2.2rem; font-weight:900; color:var(--sc-color,var(--green)); line-height:1; }
+    .savings-period { font-size:.7rem; color:var(--text-muted); font-family:var(--font-ui); font-weight:600; letter-spacing:.1em; text-transform:uppercase; }
+    .savings-facts { display:flex; flex-direction:column; gap:.35rem; padding-top:.75rem; border-top:1px solid var(--border); }
+    .savings-fact { font-size:.72rem; color:var(--text-muted); display:flex; align-items:flex-start; gap:.5rem; line-height:1.4; }
+    .savings-fact::before { content:'✓'; color:var(--sc-color,var(--green)); font-size:.7rem; flex-shrink:0; margin-top:.1rem; }
+
+    /* ════════════════ MODULES ════════════════ */
+    #modules { background:var(--bg-2); }
+    .modules-header { text-align:center; margin-bottom:3.5rem; }
+    .modules-h2 { font-family:var(--font-display); font-weight:900; font-size:clamp(2.8rem,5vw,4.5rem); line-height:.95; margin-top:.75rem; }
+    .modules-sub { color:var(--text-muted); font-size:.88rem; max-width:480px; margin:1.25rem auto 0; line-height:1.75; }
+    .modules-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1rem; margin-bottom:3rem; }
+    .mod-card { background:var(--bg-3); border:1px solid var(--border); border-radius:var(--radius); padding:1.75rem 1.5rem; cursor:pointer; transition:all .25s; position:relative; }
+    .mod-card:hover { border-color:var(--green-border); }
+    .mod-card.active { border-color:var(--green); background:var(--green-dim); }
+    .mod-check { position:absolute; top:1rem; right:1rem; width:1.4rem; height:1.4rem; background:var(--green); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.65rem; color:var(--bg); font-weight:900; opacity:0; transform:scale(.5); transition:all .25s; }
+    .mod-card.active .mod-check { opacity:1; transform:scale(1); }
+    .mod-icon { font-size:2rem; margin-bottom:1rem; display:block; }
+    .mod-name { font-family:var(--font-display); font-size:1.1rem; font-weight:800; margin-bottom:.5rem; }
+    .mod-desc { font-size:.75rem; color:var(--text-muted); line-height:1.6; }
+    .mod-tag  { display:inline-block; margin-top:.75rem; font-family:var(--font-ui); font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--green); }
+    .modules-cta { text-align:center; }
+    .modules-cta p { font-size:.82rem; color:var(--text-muted); margin-bottom:1.5rem; }
+
+    /* ════════════════ SOCIAL PROOF ════════════════ */
+    #proof { background:var(--bg-2); }
+    .proof-head { text-align:center; margin-bottom:3.5rem; }
+    .proof-h2 { font-family:var(--font-display); font-weight:900; font-size:clamp(2.5rem,4.5vw,4rem); line-height:1; margin-top:.75rem; }
+    .proof-h2 span { color:var(--green); }
+    .proof-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:4rem; }
+    .proof-stat { background:var(--bg-3); padding:2rem; text-align:center; }
+    .proof-stat-num   { font-family:var(--font-display); font-size:3.2rem; font-weight:900; color:var(--green); line-height:1; margin-bottom:.3rem; }
+    .proof-stat-label { font-family:var(--font-ui); font-size:.65rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); }
+    .testimonials { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+    .testimonial  { background:var(--bg-3); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; display:flex; flex-direction:column; gap:1.5rem; transition:border-color .25s; }
+    .testimonial:hover { border-color:var(--green-border); }
+    .t-stars { color:var(--green); font-size:.9rem; letter-spacing:.15em; }
+    .t-quote { font-size:.85rem; color:var(--text-muted); line-height:1.8; font-style:italic; flex:1; }
+    .t-author { display:flex; align-items:center; gap:.9rem; }
+    .t-avatar { width:2.75rem; height:2.75rem; background:var(--green-dim); border:1px solid var(--green-border); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+    .t-name  { font-family:var(--font-ui); font-size:.9rem; font-weight:700; }
+    .t-title { font-size:.72rem; color:var(--text-muted); margin-top:.1rem; }
+
+    /* ════════════════ CONTACT ════════════════ */
+    #contact { background:var(--bg-3); }
+    .contact-grid { display:grid; grid-template-columns:1fr 1.1fr; gap:5rem; align-items:start; }
+    .contact-h2 { font-family:var(--font-display); font-weight:900; font-size:clamp(2.5rem,4vw,3.8rem); line-height:.95; margin:1rem 0 1.5rem; }
+    .contact-h2 span { color:var(--green); }
+    .contact-desc { font-size:.85rem; color:var(--text-muted); line-height:1.8; margin-bottom:2.5rem; }
+    .contact-perks { display:flex; flex-direction:column; gap:1rem; }
+    .perk { display:flex; align-items:center; gap:.9rem; font-size:.82rem; }
+    .perk-icon { width:2rem; height:2rem; background:var(--green-dim); border:1px solid var(--green-border); border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .perk-icon img { width:1rem; height:1rem; object-fit:contain; }
+    .ghl-wrap { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius); padding:2.5rem; min-height:420px; display:flex; align-items:center; justify-content:center; }
+    .ghl-placeholder { text-align:center; }
+    .ghl-placeholder .ph-icon  { font-size:3.5rem; margin-bottom:1rem; display:block; }
+    .ghl-placeholder .ph-title { font-family:var(--font-display); font-size:1.3rem; font-weight:800; color:var(--green); margin-bottom:.5rem; }
+    .ghl-placeholder .ph-desc  { font-size:.75rem; color:var(--text-muted); line-height:1.6; }
+
+    /* ════════════════ FOOTER ════════════════ */
+    footer { background:var(--bg); border-top:1px solid var(--border); padding:2.5rem var(--gutter); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; }
+    .footer-logo img { height:26px; width:auto; }
+    .footer-copy  { font-size:.72rem; color:var(--text-muted); text-align:center; }
+    .footer-links { display:flex; gap:1.75rem; list-style:none; }
+    .footer-links a { font-family:var(--font-ui); font-size:.68rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); text-decoration:none; transition:color .2s; }
+    .footer-links a:hover { color:var(--green); }
+
+    /* ════════════════ KEYFRAMES ════════════════ */
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes floatDeco{ 0%,100%{transform:translateY(-50%) rotate(-2deg)} 50%{transform:translateY(calc(-50% - 18px)) rotate(2deg)} }
+    @keyframes marquee  { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    @keyframes pulseBrain { 0%,100%{filter:drop-shadow(0 0 8px rgba(0,200,83,.5));transform:scale(1)} 50%{filter:drop-shadow(0 0 22px rgba(0,200,83,.9));transform:scale(1.06)} }
+
+    /* ════════════════ RESPONSIVE ════════════════ */
+    @media(max-width:1100px) {
+      .modules-grid { grid-template-columns:repeat(3,1fr); }
+      .agents-grid  { grid-template-columns:repeat(2,1fr); }
+      .agent-card.card-eva { grid-column:span 2; }
+      .card-eva-right { grid-template-columns:1fr; }
+      .savings-grid { grid-template-columns:repeat(2,1fr); }
+    }
+    @media(max-width:900px) {
+      .problem-grid   { grid-template-columns:1fr; gap:3rem; }
+      .problem-body   { max-width:100%; }
+      .steps          { grid-template-columns:1fr; }
+      .steps::before  { display:none; }
+      .testimonials   { grid-template-columns:1fr; }
+      .contact-grid   { grid-template-columns:1fr; gap:3rem; }
+      .proof-stats    { grid-template-columns:repeat(2,1fr); }
+      .hero-deco      { display:none; }
+      .nav-links      { display:none; }
+      .hamburger      { display:flex; }
+      .hero-stats     { grid-template-columns:repeat(2,1fr); position:relative; bottom:auto; margin-top:4rem; border:1px solid var(--border); border-radius:var(--radius); }
+      #hero           { min-height:auto; }
+      .hero-inner     { padding-top:8rem; padding-bottom:3rem; }
+      .ptab-panel.active { grid-template-columns:1fr; }
+      .panel-img-col  { position:static; display:grid; grid-template-columns:120px 1fr; align-items:center; gap:1.25rem; }
+      .panel-img-col .panel-img-wrap { border-radius:50%; overflow:hidden; height:120px; }
+      .panel-bottom   { grid-template-columns:1fr; }
+      .comparison     { grid-template-columns:1fr; }
+      .card-eva-inner { grid-template-columns:1fr; }
+      .card-eva-inner .card-img-wrap { height:280px; }
+      .card-eva-right { padding:1.5rem; grid-template-columns:1fr; gap:1.25rem; }
+    }
+    @media(max-width:700px) {
+      .agents-grid  { grid-template-columns:1fr; }
+      .agent-card.card-eva { grid-column:span 1; }
+      .modules-grid { grid-template-columns:repeat(2,1fr); }
+      .flow         { flex-direction:column; align-items:stretch; }
+      .flow .flow-node { max-width:100%; }
+      .flow-arrow   { transform:rotate(90deg); align-self:center; }
+      .savings-grid { grid-template-columns:1fr; }
+      .proof-stats  { grid-template-columns:1fr 1fr; }
+      footer        { flex-direction:column; text-align:center; }
+      .footer-links { justify-content:center; }
+    }
+    @media(max-width:480px) {
+      .modules-grid { grid-template-columns:1fr; }
+      .hero-stats   { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobileMenu()">✕ close</button>
+  <a href="#problem"  onclick="closeMobileMenu()">Problem</a>
+  <a href="#agents"   onclick="closeMobileMenu()">The Monkeys</a>
+  <a href="#playbook" onclick="closeMobileMenu()">How They Work</a>
+  <a href="#roi"      onclick="closeMobileMenu()">ROI</a>
+  <a href="#modules"  onclick="closeMobileMenu()">Modules</a>
+  <a href="#contact"  onclick="closeMobileMenu()" style="color:var(--green)">Book a Demo</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo"><img src="brand/Vector.png" alt="Artificial Ignorance"></a>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#agents">The Monkeys</a></li>
+    <li><a href="#playbook">How They Work</a></li>
+    <li><a href="#roi">ROI</a></li>
+    <li><a href="#modules">Modules</a></li>
+    <li><a href="#proof">Proof</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <a href="#contact" class="btn btn-primary">Book a Demo</a>
+    <div class="hamburger" onclick="openMobileMenu()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="container hero-inner">
+    <div class="hero-badge">🧠 AI Infrastructure · Built Different</div>
+    <h1 class="hero-h1">
+      <span class="line-solid">THE BRAIN</span>
+      <span class="line-green">BEHIND YOUR</span>
+      <span class="line-outline">BUSINESS.</span>
+    </h1>
+    <p class="hero-sub">We build AI infrastructure that truly knows your company — voice, CRM, memory, and six intelligent agents. All learning. All connected. All working 24/7.</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn btn-primary">Book a Demo →</a>
+      <a href="#agents"  class="btn btn-outline">Meet the Monkeys 🐒</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="stat-num" data-count="80">0</div><div class="stat-label">Companies Served</div></div>
+      <div class="hero-stat"><div class="stat-num">6</div><div class="stat-label">AI Agents</div></div>
+      <div class="hero-stat"><div class="stat-num">24/7</div><div class="stat-label">Always On</div></div>
+      <div class="hero-stat"><div class="stat-num">∞</div><div class="stat-label">Compounding Knowledge</div></div>
+    </div>
+  </div>
+  <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_17_30.png" alt="" class="hero-deco">
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <!-- set 1 -->
+    <span class="marquee-item"><img src="partner%20logo/gohighlevel.png" alt="GoHighLevel"><span class="marquee-dot"></span><img src="partner%20logo/facebook.png" alt="Facebook"><span class="marquee-dot"></span><img src="partner%20logo/instagram.jpg" alt="Instagram"><span class="marquee-dot"></span><img src="partner%20logo/whatsapp.png" alt="WhatsApp"><span class="marquee-dot"></span><img src="partner%20logo/google%20business%20profile.jpg" alt="Google Business Profile"><span class="marquee-dot"></span><img src="partner%20logo/google%20calendar.png" alt="Google Calendar"><span class="marquee-dot"></span><img src="partner%20logo/hubspot.jpg" alt="HubSpot"><span class="marquee-dot"></span><img src="partner%20logo/linkedin.png" alt="LinkedIn"><span class="marquee-dot"></span><img src="partner%20logo/pinterest.png" alt="Pinterest"><span class="marquee-dot"></span><img src="partner%20logo/youtube.png" alt="YouTube"></span>
+    <!-- set 2 — duplicate for seamless loop -->
+    <span class="marquee-item"><img src="partner%20logo/gohighlevel.png" alt="GoHighLevel"><span class="marquee-dot"></span><img src="partner%20logo/facebook.png" alt="Facebook"><span class="marquee-dot"></span><img src="partner%20logo/instagram.jpg" alt="Instagram"><span class="marquee-dot"></span><img src="partner%20logo/whatsapp.png" alt="WhatsApp"><span class="marquee-dot"></span><img src="partner%20logo/google%20business%20profile.jpg" alt="Google Business Profile"><span class="marquee-dot"></span><img src="partner%20logo/google%20calendar.png" alt="Google Calendar"><span class="marquee-dot"></span><img src="partner%20logo/hubspot.jpg" alt="HubSpot"><span class="marquee-dot"></span><img src="partner%20logo/linkedin.png" alt="LinkedIn"><span class="marquee-dot"></span><img src="partner%20logo/pinterest.png" alt="Pinterest"><span class="marquee-dot"></span><img src="partner%20logo/youtube.png" alt="YouTube"></span>
+  </div>
+</div>
+
+<!-- ═══ PROBLEM ═══ -->
+<section id="problem" class="section">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="reveal">
+        <span class="label">The Problem</span>
+        <h2 class="problem-h2">Generic AI<br>doesn't know<br><em>your</em> business.</h2>
+        <p class="problem-body">Most AI tools are one-size-fits-all. They forget your business the moment you close the tab. You spend more time correcting and re-explaining than actually getting work done.</p>
+      </div>
+      <div class="problem-cards reveal">
+        <div class="problem-card">
+          <img src="brand/1.png" alt="" class="pc-icon">
+          <div>
+            <div class="pc-title">Drowning in Repetition</div>
+            <div class="pc-desc">Your team burns 60% of their day on tasks that should be automated — emails, follow-ups, social posts, support tickets. That's not a people problem. It's an infrastructure problem.</div>
+          </div>
+        </div>
+        <div class="problem-card">
+          <img src="brand/4.png" alt="" class="pc-icon">
+          <div>
+            <div class="pc-title">AI That Forgets Everything</div>
+            <div class="pc-desc">Generic AI has no memory of your business. Every conversation starts from zero. Endless re-explaining. Zero compounding value. It's a tool, not a team member.</div>
+          </div>
+        </div>
+        <div class="problem-card">
+          <img src="brand/2.png" alt="" class="pc-icon">
+          <div>
+            <div class="pc-title">Tool Sprawl Is Killing ROI</div>
+            <div class="pc-desc">Ten subscriptions that don't talk to each other. No unified brain. No coordinated output. Your AI stack costs more than it saves and nobody knows what's working.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SOLUTION ═══ -->
+<section id="solution" class="section">
+  <div class="container">
+    <div class="sol-header reveal">
+      <span class="label">Our Solution</span>
+      <h2 class="sol-h2">One brain.<br><span>Infinite memory.</span><br>Six specialists.</h2>
+      <p class="sol-sub">We build a living AI knowledge base from your real business data — every call, every email, every social interaction — then power six specialist agents that know your company inside out.</p>
+    </div>
+    <div class="flow reveal">
+      <div class="flow-node">
+        <span class="node-emoji">🎙️</span>
+        <span class="node-title">AI Voice</span>
+        <span class="node-desc">Captures knowledge from every call</span>
+        <div class="node-tags"><span class="node-tag">ElevenLabs</span><span class="node-tag">Knotie.AI</span><span class="node-tag">RetellAI</span></div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <span class="node-emoji">📧</span>
+        <span class="node-title">CRM + Email</span>
+        <span class="node-desc">Contacts, history &amp; campaigns</span>
+        <div class="node-tags"><span class="node-tag">GoHighLevel</span></div>
+      </div>
+      <div class="flow-arrow">+</div>
+      <div class="flow-node">
+        <span class="node-emoji">📱</span>
+        <span class="node-title">Social Media</span>
+        <span class="node-desc">Posts, engagement &amp; trends</span>
+        <div class="node-tags"><span class="node-tag">All platforms</span></div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node is-brain">
+        <span class="node-emoji">🧠</span>
+        <span class="node-title">The AI Brain</span>
+        <span class="node-desc">RAG knowledge base — your company's living memory. Gets smarter every day.</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <span class="node-emoji">🐒</span>
+        <span class="node-title">Your Agents</span>
+        <span class="node-desc">Carl · Mike · Penny · Sherlock · Rosa · Eva</span>
+        <div class="node-tags"><span class="node-tag">24/7</span><span class="node-tag">Always learning</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MEET THE MONKEYS ═══ -->
+<section id="agents" class="section">
+  <div class="container">
+    <div class="agents-header">
+      <div class="reveal">
+        <span class="label">Meet the Team</span>
+        <h2 class="agents-h2">The Monkeys 🐒</h2>
+      </div>
+      <p class="agents-note reveal">Six specialists. All powered by your AI brain. Buy one or buy them all.</p>
+    </div>
+
+    <div class="agents-grid">
+
+      <!-- CARL -->
+      <div class="agent-card reveal" style="--card-color:var(--carl-color);--card-bg:rgba(41,121,255,.08);--card-badge-bg:rgba(41,121,255,.1);--card-badge-border:rgba(41,121,255,.3);">
+        <div class="card-img-wrap" style="height:300px;">
+          <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_17_30.png" alt="Carl — Customer Support Monkey">
+          <div class="card-color-bar"></div>
+        </div>
+        <div class="card-body">
+          <span class="card-badge">Customer Support</span>
+          <div class="card-name">Carl</div>
+          <div class="card-role">The Support Monkey</div>
+          <p class="card-desc">Carl handles every customer query with the full knowledge of your business behind him. No scripts. Real answers. No hold music.</p>
+          <div class="card-tasks">
+            <div class="card-task">24/7 instant query resolution</div>
+            <div class="card-task">Intelligent human escalation</div>
+            <div class="card-task">Learns from every interaction</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MIKE -->
+      <div class="agent-card reveal" style="--card-color:var(--mike-color);--card-bg:rgba(0,200,83,.08);--card-badge-bg:rgba(0,200,83,.1);--card-badge-border:rgba(0,200,83,.3);">
+        <div class="card-img-wrap" style="height:300px;">
+          <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_21_09.png" alt="Mike — Social Media Monkey">
+          <div class="card-color-bar"></div>
+        </div>
+        <div class="card-body">
+          <span class="card-badge">Social Media</span>
+          <div class="card-name">Mike</div>
+          <div class="card-role">The Social Monkey</div>
+          <p class="card-desc">Mike creates platform-native content across every channel — adapted for each audience, scheduled and posted automatically.</p>
+          <div class="card-tasks">
+            <div class="card-task">Platform-specific content creation</div>
+            <div class="card-task">Automated scheduling &amp; posting</div>
+            <div class="card-task">Engagement tracking &amp; replies</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVA — FLAGSHIP, full width -->
+      <div class="agent-card card-eva reveal" style="--card-color:var(--eva-color);--card-bg:rgba(0,191,165,.08);--card-badge-bg:rgba(0,191,165,.1);--card-badge-border:rgba(0,191,165,.3);">
+        <div class="card-eva-inner">
+          <div class="card-img-wrap">
+            <img src="brand/EVA.png" alt="Eva — Personal Assistant &amp; AI Brain">
+            <div class="card-color-bar"></div>
+          </div>
+          <div class="card-eva-right">
+            <div class="card-body">
+              <span class="card-badge" style="background:rgba(0,191,165,.15);border-color:rgba(0,191,165,.4);color:var(--eva-color);">⭐ Flagship · The AI Brain</span>
+              <div class="card-name">Eva</div>
+              <div class="card-role">Personal Assistant</div>
+              <p class="card-desc">Eva IS the AI brain. She learns everything about your business and coordinates the entire team. The longer you run the infrastructure, the smarter Eva gets — she's not just an assistant, she's your company's collective intelligence.</p>
+            </div>
+            <div class="card-eva-tasks card-tasks" style="justify-content:flex-start;">
+              <div class="card-task" style="--card-color:var(--eva-color);">Manages inbox &amp; calendar 24/7</div>
+              <div class="card-task" style="--card-color:var(--eva-color);">Coordinates all other agents</div>
+              <div class="card-task" style="--card-color:var(--eva-color);">Holds your full business memory</div>
+              <div class="card-task" style="--card-color:var(--eva-color);">Gets smarter every single day</div>
+              <div class="card-task" style="--card-color:var(--eva-color);">The core of the AI infrastructure</div>
+              <div class="card-task" style="--card-color:var(--eva-color);">Provides daily intelligence briefings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENNY -->
+      <div class="agent-card reveal" style="--card-color:var(--penny-color);--card-bg:rgba(255,214,0,.10);--card-badge-bg:rgba(255,214,0,.1);--card-badge-border:rgba(255,214,0,.3);">
+        <div class="card-img-wrap" style="height:300px;">
+          <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_13_36.png" alt="Penny — Lead Generation Monkey">
+          <div class="card-color-bar"></div>
+        </div>
+        <div class="card-body">
+          <span class="card-badge" style="color:var(--penny-color);">Lead Generation</span>
+          <div class="card-name">Penny</div>
+          <div class="card-role">The Lead Monkey</div>
+          <p class="card-desc">Penny hunts, qualifies, and nurtures leads using your full business context — not generic templates, actual intelligence about what your prospects care about.</p>
+          <div class="card-tasks">
+            <div class="card-task">Prospect identification &amp; outreach</div>
+            <div class="card-task">Automated follow-up sequences</div>
+            <div class="card-task">Lead scoring &amp; qualification</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHERLOCK -->
+      <div class="agent-card reveal" style="--card-color:var(--sherlock-color);--card-bg:rgba(171,71,188,.08);--card-badge-bg:rgba(171,71,188,.1);--card-badge-border:rgba(171,71,188,.3);">
+        <div class="card-img-wrap" style="height:300px;">
+          <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_23_15.png" alt="Sherlock — SEO Monkey">
+          <div class="card-color-bar"></div>
+        </div>
+        <div class="card-body">
+          <span class="card-badge" style="color:var(--sherlock-color);">SEO · GEO</span>
+          <div class="card-name">Sherlock</div>
+          <div class="card-role">The Search Monkey</div>
+          <p class="card-desc">Sherlock investigates every angle of your search presence — traditional SEO and the new frontier of AI search (GEO). He makes your brand impossible to miss.</p>
+          <div class="card-tasks">
+            <div class="card-task">SEO-optimised content &amp; audits</div>
+            <div class="card-task">Generative Engine Optimisation</div>
+            <div class="card-task">Rank tracking &amp; competitor intel</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROSA -->
+      <div class="agent-card reveal" style="--card-color:var(--rosa-color);--card-bg:rgba(245,0,87,.08);--card-badge-bg:rgba(245,0,87,.1);--card-badge-border:rgba(245,0,87,.3);">
+        <div class="card-img-wrap" style="height:300px;">
+          <img src="brand/ChatGPT%20Image%202%20apr%202026%2C%2009_05_59.png" alt="Rosa — Sales Monkey">
+          <div class="card-color-bar"></div>
+        </div>
+        <div class="card-body">
+          <span class="card-badge" style="color:var(--rosa-color);">Sales</span>
+          <div class="card-name">Rosa</div>
+          <div class="card-role">The Sales Monkey</div>
+          <p class="card-desc">Rosa closes. Armed with your full business context, product knowledge, and customer history, she runs your sales process from first touch to signed deal.</p>
+          <div class="card-tasks">
+            <div class="card-task">Automated sales conversations</div>
+            <div class="card-task">Proposal &amp; quote generation</div>
+            <div class="card-task">Pipeline management &amp; forecasting</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AGENT PLAYBOOK ═══ -->
+<section id="playbook" class="section">
+  <div class="container">
+    <div class="playbook-header reveal">
+      <span class="label">Agent Playbook</span>
+      <h2 class="playbook-h2">How your monkeys <span>actually work</span></h2>
+      <p class="playbook-sub">Each agent runs a defined workflow powered by your AI brain — solving specific problems and generating measurable financial returns.</p>
+    </div>
+
+    <!-- Tab nav -->
+    <div class="ptabs-nav reveal">
+      <button class="ptab-btn active" data-target="panel-eva"      style="--tab-color:var(--eva-color);">     <img src="brand/EVA.png"                                          alt="Eva">      Eva</button>
+      <button class="ptab-btn"        data-target="panel-carl"     style="--tab-color:var(--carl-color);">    <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_17_30.png" alt="Carl">    Carl</button>
+      <button class="ptab-btn"        data-target="panel-mike"     style="--tab-color:var(--mike-color);">    <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_21_09.png" alt="Mike">    Mike</button>
+      <button class="ptab-btn"        data-target="panel-penny"    style="--tab-color:var(--penny-color);">   <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_13_36.png" alt="Penny">   Penny</button>
+      <button class="ptab-btn"        data-target="panel-sherlock" style="--tab-color:var(--sherlock-color);"><img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_23_15.png" alt="Sherlock"> Sherlock</button>
+      <button class="ptab-btn"        data-target="panel-rosa"     style="--tab-color:var(--rosa-color);">    <img src="brand/ChatGPT%20Image%202%20apr%202026%2C%2009_05_59.png" alt="Rosa">    Rosa</button>
+    </div>
+
+    <!-- ── EVA ── -->
+    <div class="ptab-panel active" id="panel-eva" style="--panel-color:var(--eva-color);--panel-color-dim:rgba(0,191,165,.12);--panel-color-border:rgba(0,191,165,.3);--panel-bg:rgba(0,191,165,.06);--panel-border:rgba(0,191,165,.3);">
+      <div class="panel-img-col reveal">
+        <div class="panel-img-wrap"><img src="brand/EVA.png" alt="Eva"></div>
+        <div class="panel-agent-name">Eva</div>
+        <div class="panel-agent-role">Personal Assistant · AI Brain</div>
+      </div>
+      <div class="panel-content reveal">
+        <div>
+          <div class="pflow-title">How Eva Works</div>
+          <div class="pflow-steps">
+            <div class="pflow-step"><div class="pflow-num">1</div><div class="pflow-text"><strong>Connects to everything.</strong> Eva links to your voice system, CRM, email, and social channels — ingesting all business data into the RAG knowledge base continuously.</div></div>
+            <div class="pflow-step"><div class="pflow-num">2</div><div class="pflow-text"><strong>Builds your AI brain.</strong> Every interaction, every call, every email enriches Eva's understanding of your business, products, clients, and tone.</div></div>
+            <div class="pflow-step"><div class="pflow-num">3</div><div class="pflow-text"><strong>Manages your time.</strong> Eva handles your calendar, drafts your emails, takes meeting notes, and filters your inbox — so you only deal with what matters.</div></div>
+            <div class="pflow-step"><div class="pflow-num">4</div><div class="pflow-text"><strong>Coordinates the team.</strong> Eva briefs Carl, Mike, Penny, Sherlock, and Rosa — passing context, syncing tasks, and ensuring every agent knows what the others are doing.</div></div>
+            <div class="pflow-step"><div class="pflow-num">5</div><div class="pflow-text"><strong>Delivers daily briefings.</strong> Every morning, Eva sends a business intelligence summary — what happened, what needs attention, what the agents are working on.</div></div>
+          </div>
+        </div>
+        <div class="panel-bottom">
+          <div class="panel-card">
+            <div class="panel-card-title">Problems Eva Solves</div>
+            <div class="prob-item"><span class="prob-icon">⚡</span><div class="prob-text"><strong>Fragmented business knowledge</strong>Information lives in email, CRM, calls, and WhatsApp — nowhere and everywhere at once. Eva unifies it all.</div></div>
+            <div class="prob-item"><span class="prob-icon">⏱️</span><div class="prob-text"><strong>Executive time consumed by admin</strong>20+ hours per week lost to scheduling, inbox management, and coordination tasks that require no human judgment.</div></div>
+            <div class="prob-item"><span class="prob-icon">🔀</span><div class="prob-text"><strong>Agents working in silos</strong>Without Eva, each agent operates independently. She's the connective tissue that turns six tools into one coordinated team.</div></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-card-title">Financial Impact</div>
+            <div class="roi-item"><div class="roi-num">20+ hrs</div><div class="roi-label">Executive time saved per week</div><div class="roi-note">At £75/hr, that's £1,500/week returned to strategic work</div></div>
+            <div class="roi-item"><div class="roi-num">£50k+</div><div class="roi-label">Equivalent annual coordination value</div><div class="roi-note">Replaces an EA or operations manager role</div></div>
+            <div class="roi-item"><div class="roi-num">10×</div><div class="roi-label">Agent efficiency multiplier</div><div class="roi-note">Coordinated agents dramatically outperform siloed ones</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CARL ── -->
+    <div class="ptab-panel" id="panel-carl" style="--panel-color:var(--carl-color);--panel-color-dim:rgba(41,121,255,.12);--panel-color-border:rgba(41,121,255,.3);--panel-bg:rgba(41,121,255,.06);--panel-border:rgba(41,121,255,.3);">
+      <div class="panel-img-col reveal">
+        <div class="panel-img-wrap"><img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_17_30.png" alt="Carl"></div>
+        <div class="panel-agent-name">Carl</div>
+        <div class="panel-agent-role">Customer Support Monkey</div>
+      </div>
+      <div class="panel-content reveal">
+        <div>
+          <div class="pflow-title">How Carl Works</div>
+          <div class="pflow-steps">
+            <div class="pflow-step"><div class="pflow-num">1</div><div class="pflow-text"><strong>Customer contacts your business</strong> via phone, chat, email, or SMS. Carl receives the query instantly — zero hold time, zero queue.</div></div>
+            <div class="pflow-step"><div class="pflow-num">2</div><div class="pflow-text"><strong>Carl searches Eva's brain</strong> for the relevant context — product info, client history, past issues, company policies — in milliseconds.</div></div>
+            <div class="pflow-step"><div class="pflow-num">3</div><div class="pflow-text"><strong>Responds with precision.</strong> Not a template — a real, contextual answer that sounds like it came from someone who actually knows your business.</div></div>
+            <div class="pflow-step"><div class="pflow-num">4</div><div class="pflow-text"><strong>Escalates intelligently.</strong> When a query genuinely needs a human, Carl flags it with full context so your team doesn't start from zero.</div></div>
+            <div class="pflow-step"><div class="pflow-num">5</div><div class="pflow-text"><strong>Logs every interaction back to the brain.</strong> Every query and resolution makes the knowledge base smarter for next time.</div></div>
+          </div>
+        </div>
+        <div class="panel-bottom">
+          <div class="panel-card">
+            <div class="panel-card-title">Problems Carl Solves</div>
+            <div class="prob-item"><span class="prob-icon">🕐</span><div class="prob-text"><strong>Slow response times</strong>Average email support response is 4+ hours. Carl responds in 3 seconds — 24/7, including weekends and bank holidays.</div></div>
+            <div class="prob-item"><span class="prob-icon">🌙</span><div class="prob-text"><strong>After-hours gaps</strong>40% of customer queries arrive outside business hours. Without Carl, those customers go to your competitor.</div></div>
+            <div class="prob-item"><span class="prob-icon">📋</span><div class="prob-text"><strong>Inconsistent answers</strong>Different staff give different answers. Carl gives the same accurate, on-brand answer every single time.</div></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-card-title">Financial Impact</div>
+            <div class="roi-item"><div class="roi-num">£30k+</div><div class="roi-label">Saved vs hiring a support agent</div><div class="roi-note">Salary, NI, pension, training — all eliminated</div></div>
+            <div class="roi-item"><div class="roi-num">£0.08</div><div class="roi-label">Cost per ticket (was £8+)</div><div class="roi-note">99% reduction in per-ticket support cost</div></div>
+            <div class="roi-item"><div class="roi-num">8,760 hrs</div><div class="roi-label">Available per year</div><div class="roi-note">vs 2,080 hrs for one full-time employee</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MIKE ── -->
+    <div class="ptab-panel" id="panel-mike" style="--panel-color:var(--mike-color);--panel-color-dim:rgba(0,200,83,.12);--panel-color-border:rgba(0,200,83,.3);--panel-bg:rgba(0,200,83,.06);--panel-border:rgba(0,200,83,.3);">
+      <div class="panel-img-col reveal">
+        <div class="panel-img-wrap"><img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_21_09.png" alt="Mike"></div>
+        <div class="panel-agent-name">Mike</div>
+        <div class="panel-agent-role">Social Media Manager</div>
+      </div>
+      <div class="panel-content reveal">
+        <div>
+          <div class="pflow-title">How Mike Works</div>
+          <div class="pflow-steps">
+            <div class="pflow-step"><div class="pflow-num">1</div><div class="pflow-text"><strong>Brain analysis.</strong> Mike reads your existing top-performing content and brand voice from Eva's knowledge base to understand what works for your audience.</div></div>
+            <div class="pflow-step"><div class="pflow-num">2</div><div class="pflow-text"><strong>Trend research.</strong> Mike scans your industry for trending topics, competitor content, and audience conversations to identify timely opportunities.</div></div>
+            <div class="pflow-step"><div class="pflow-num">3</div><div class="pflow-text"><strong>Platform-native content creation.</strong> Not the same post copy-pasted. LinkedIn gets thought leadership. Instagram gets visuals &amp; hooks. X gets punchy. TikTok gets raw.</div></div>
+            <div class="pflow-step"><div class="pflow-num">4</div><div class="pflow-text"><strong>Optimal scheduling.</strong> Mike posts at the times your specific audience is most active — maximising organic reach without paid promotion.</div></div>
+            <div class="pflow-step"><div class="pflow-num">5</div><div class="pflow-text"><strong>Monitors &amp; reports.</strong> Tracks engagement, replies to comments, and feeds performance data back to the brain to refine future content.</div></div>
+          </div>
+        </div>
+        <div class="panel-bottom">
+          <div class="panel-card">
+            <div class="panel-card-title">Problems Mike Solves</div>
+            <div class="prob-item"><span class="prob-icon">📉</span><div class="prob-text"><strong>Inconsistent posting</strong>Most SMBs post less than 3× per week. Inconsistency kills organic reach. Mike posts daily without you lifting a finger.</div></div>
+            <div class="prob-item"><span class="prob-icon">🔁</span><div class="prob-text"><strong>Same content, every platform</strong>Copy-pasting kills engagement. Mike creates genuinely different content for each platform's format and audience.</div></div>
+            <div class="prob-item"><span class="prob-icon">💸</span><div class="prob-text"><strong>Agency fees with no transparency</strong>Social media agencies charge £1,500–£3,000/month for services Mike delivers in real time, 24/7.</div></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-card-title">Financial Impact</div>
+            <div class="roi-item"><div class="roi-num">£32k+</div><div class="roi-label">Saved vs a social media manager</div><div class="roi-note">Salary, benefits, and agency fees combined</div></div>
+            <div class="roi-item"><div class="roi-num">15 hrs</div><div class="roi-label">Saved per week on content creation</div><div class="roi-note">Returned to billable or strategic work</div></div>
+            <div class="roi-item"><div class="roi-num">+40%</div><div class="roi-label">Average engagement uplift</div><div class="roi-note">Consistent, platform-native content outperforms sporadic posts</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PENNY ── -->
+    <div class="ptab-panel" id="panel-penny" style="--panel-color:var(--penny-color);--panel-color-dim:rgba(255,214,0,.12);--panel-color-border:rgba(255,214,0,.3);--panel-bg:rgba(255,214,0,.08);--panel-border:rgba(255,214,0,.3);">
+      <div class="panel-img-col reveal">
+        <div class="panel-img-wrap"><img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_13_36.png" alt="Penny"></div>
+        <div class="panel-agent-name">Penny</div>
+        <div class="panel-agent-role">Lead Generation</div>
+      </div>
+      <div class="panel-content reveal">
+        <div>
+          <div class="pflow-title">How Penny Works</div>
+          <div class="pflow-steps">
+            <div class="pflow-step"><div class="pflow-num">1</div><div class="pflow-text"><strong>Defines your ideal customer.</strong> Penny analyses your existing client data in the brain to build a precise ICP — industry, size, pain points, buying triggers.</div></div>
+            <div class="pflow-step"><div class="pflow-num">2</div><div class="pflow-text"><strong>Builds a targeted prospect list.</strong> Penny searches LinkedIn, directories, and databases to find prospects that match your ICP — not random lists.</div></div>
+            <div class="pflow-step"><div class="pflow-num">3</div><div class="pflow-text"><strong>Crafts personalised outreach.</strong> Using context from the brain, every message references something specific and relevant — not a generic "hope this finds you well" template.</div></div>
+            <div class="pflow-step"><div class="pflow-num">4</div><div class="pflow-text"><strong>Manages the follow-up sequence.</strong> 80% of deals require 5+ touchpoints. Penny handles every follow-up automatically, adjusting tone and angle each time.</div></div>
+            <div class="pflow-step"><div class="pflow-num">5</div><div class="pflow-text"><strong>Qualifies and passes to Rosa.</strong> Hot leads are handed off with full context so Rosa can pick up exactly where Penny left off.</div></div>
+          </div>
+        </div>
+        <div class="panel-bottom">
+          <div class="panel-card">
+            <div class="panel-card-title">Problems Penny Solves</div>
+            <div class="prob-item"><span class="prob-icon">⏰</span><div class="prob-text"><strong>Manual prospecting eats your week</strong>Sales people spend 20% of their week on prospecting that could be automated. Penny does it 24/7 without losing focus.</div></div>
+            <div class="prob-item"><span class="prob-icon">📧</span><div class="prob-text"><strong>Generic outreach gets ignored</strong>Average cold email open rate is 21%. Penny's personalised, context-driven messages achieve 3–5× higher reply rates.</div></div>
+            <div class="prob-item"><span class="prob-icon">📭</span><div class="prob-text"><strong>Missed follow-ups lose deals</strong>80% of sales need 5+ follow-ups. 44% of reps give up after one. Penny never gives up.</div></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-card-title">Financial Impact</div>
+            <div class="roi-item"><div class="roi-num">£35k+</div><div class="roi-label">Saved vs an SDR hire</div><div class="roi-note">Salary, commission, tools, and onboarding costs</div></div>
+            <div class="roi-item"><div class="roi-num">3×</div><div class="roi-label">More outreach volume than a human</div><div class="roi-note">Penny never sleeps, never loses motivation</div></div>
+            <div class="roi-item"><div class="roi-num">5×</div><div class="roi-label">Higher reply rates on outreach</div><div class="roi-note">Personalised, context-rich messages vs generic templates</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SHERLOCK ── -->
+    <div class="ptab-panel" id="panel-sherlock" style="--panel-color:var(--sherlock-color);--panel-color-dim:rgba(171,71,188,.12);--panel-color-border:rgba(171,71,188,.3);--panel-bg:rgba(171,71,188,.06);--panel-border:rgba(171,71,188,.3);">
+      <div class="panel-img-col reveal">
+        <div class="panel-img-wrap"><img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_23_15.png" alt="Sherlock"></div>
+        <div class="panel-agent-name">Sherlock</div>
+        <div class="panel-agent-role">SEO &amp; GEO Specialist</div>
+      </div>
+      <div class="panel-content reveal">
+        <div>
+          <div class="pflow-title">How Sherlock Works</div>
+          <div class="pflow-steps">
+            <div class="pflow-step"><div class="pflow-num">1</div><div class="pflow-text"><strong>Search presence audit.</strong> Sherlock analyses your current rankings, site health, and visibility in both traditional search (Google) and AI search engines (ChatGPT, Perplexity, Gemini).</div></div>
+            <div class="pflow-step"><div class="pflow-num">2</div><div class="pflow-text"><strong>Competitor gap analysis.</strong> Identifies which keywords and topics your competitors rank for that you don't — and builds a priority attack list.</div></div>
+            <div class="pflow-step"><div class="pflow-num">3</div><div class="pflow-text"><strong>Content strategy creation.</strong> Using your brain data, Sherlock creates SEO articles and landing pages that address real customer questions with your authentic expertise.</div></div>
+            <div class="pflow-step"><div class="pflow-num">4</div><div class="pflow-text"><strong>GEO optimisation.</strong> Structures your content so it's cited by AI answers in ChatGPT, Perplexity, and Google's AI Overview — the new frontier of search.</div></div>
+            <div class="pflow-step"><div class="pflow-num">5</div><div class="pflow-text"><strong>Weekly rank tracking &amp; reporting.</strong> Monitors rankings, traffic, and AI citation frequency — adjusting strategy based on what's working.</div></div>
+          </div>
+        </div>
+        <div class="panel-bottom">
+          <div class="panel-card">
+            <div class="panel-card-title">Problems Sherlock Solves</div>
+            <div class="prob-item"><span class="prob-icon">👻</span><div class="prob-text"><strong>Invisible in search</strong>If you don't appear on page 1 — traditional or AI — you functionally don't exist to 90% of potential customers.</div></div>
+            <div class="prob-item"><span class="prob-icon">🤖</span><div class="prob-text"><strong>No GEO strategy</strong>AI search is replacing Google for millions of users. Most businesses have zero strategy for being cited in AI answers.</div></div>
+            <div class="prob-item"><span class="prob-icon">💰</span><div class="prob-text"><strong>Expensive agencies with opaque results</strong>SEO agencies charge £2,000–£5,000/month with 6-month contracts and vague reporting. Sherlock delivers transparent, continuous results.</div></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-card-title">Financial Impact</div>
+            <div class="roi-item"><div class="roi-num">£36k+</div><div class="roi-label">Saved vs an SEO agency annually</div><div class="roi-note">At £1,500–£3,000/month, agency fees add up fast</div></div>
+            <div class="roi-item"><div class="roi-num">Compounds</div><div class="roi-label">Organic growth = falling CAC over time</div><div class="roi-note">Every article is a 24/7 sales asset that never expires</div></div>
+            <div class="roi-item"><div class="roi-num">First-mover</div><div class="roi-label">GEO advantage while competitors sleep</div><div class="roi-note">AI search share is growing 40% year-on-year</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ROSA ── -->
+    <div class="ptab-panel" id="panel-rosa" style="--panel-color:var(--rosa-color);--panel-color-dim:rgba(245,0,87,.12);--panel-color-border:rgba(245,0,87,.3);--panel-bg:rgba(245,0,87,.06);--panel-border:rgba(245,0,87,.3);">
+      <div class="panel-img-col reveal">
+        <div class="panel-img-wrap"><img src="brand/ChatGPT%20Image%202%20apr%202026%2C%2009_05_59.png" alt="Rosa"></div>
+        <div class="panel-agent-name">Rosa</div>
+        <div class="panel-agent-role">Sales Agent</div>
+      </div>
+      <div class="panel-content reveal">
+        <div>
+          <div class="pflow-title">How Rosa Works</div>
+          <div class="pflow-steps">
+            <div class="pflow-step"><div class="pflow-num">1</div><div class="pflow-text"><strong>Receives qualified leads from Penny.</strong> Rosa picks up where Penny left off — with full context on the prospect's background, interests, and engagement history.</div></div>
+            <div class="pflow-step"><div class="pflow-num">2</div><div class="pflow-text"><strong>Reviews the brain.</strong> Rosa checks your full product knowledge, pricing, past deals, and client success stories — armed to handle any question or objection.</div></div>
+            <div class="pflow-step"><div class="pflow-num">3</div><div class="pflow-text"><strong>Opens the conversation.</strong> Rosa initiates a personalised sales dialogue — not a pitch, a genuine conversation that leads with the prospect's specific pain points.</div></div>
+            <div class="pflow-step"><div class="pflow-num">4</div><div class="pflow-text"><strong>Handles objections.</strong> Using deep product and competitor knowledge from the brain, Rosa addresses every objection with accurate, confident responses.</div></div>
+            <div class="pflow-step"><div class="pflow-num">5</div><div class="pflow-text"><strong>Generates proposals &amp; closes.</strong> Rosa creates tailored proposals, sends contracts, and follows up until the deal is won — or intelligently nurtures prospects not yet ready to buy.</div></div>
+          </div>
+        </div>
+        <div class="panel-bottom">
+          <div class="panel-card">
+            <div class="panel-card-title">Problems Rosa Solves</div>
+            <div class="prob-item"><span class="prob-icon">⚡</span><div class="prob-text"><strong>Slow lead response kills conversions</strong>Respond to a lead within 5 minutes and you're 100× more likely to convert. Rosa responds in seconds, every time.</div></div>
+            <div class="prob-item"><span class="prob-icon">😴</span><div class="prob-text"><strong>Sales only happen during office hours</strong>Deals are lost every night and weekend. Rosa sells 24/7/365 — your best sales rep never sleeps.</div></div>
+            <div class="prob-item"><span class="prob-icon">📑</span><div class="prob-text"><strong>Inconsistent proposals and follow-up</strong>Sales quality varies by person and energy level. Rosa delivers the same excellent experience every single time.</div></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-card-title">Financial Impact</div>
+            <div class="roi-item"><div class="roi-num">7×</div><div class="roi-label">Higher conversion from instant response</div><div class="roi-note">Speed-to-lead is the #1 factor in B2B conversion rates</div></div>
+            <div class="roi-item"><div class="roi-num">£40k+</div><div class="roi-label">Saved vs an additional sales hire</div><div class="roi-note">Salary, commission, CRM licences, and onboarding</div></div>
+            <div class="roi-item"><div class="roi-num">−30%</div><div class="roi-label">Shorter sales cycle</div><div class="roi-note">Faster follow-up and consistent nurturing compress timelines</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section id="how" class="section">
+  <div class="container">
+    <div class="how-header reveal">
+      <span class="label">How It Works</span>
+      <h2 class="how-h2">Three steps.<br><span>One smart business.</span></h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-circle">01</div>
+        <div class="step-icon">🎙️</div>
+        <div class="step-title">Feed the Brain</div>
+        <p class="step-desc">Your AI voice system captures every call. CRM pulls in your emails and social history. The knowledge base grows with real, live business data from day one.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-circle">02</div>
+        <div class="step-icon">🧠</div>
+        <div class="step-title">Brain Learns Your Business</div>
+        <p class="step-desc">The RAG system processes all your data into a living company memory. It understands your products, your tone, your customers, and your history — deeply and continuously.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-circle">03</div>
+        <div class="step-icon">🐒</div>
+        <div class="step-title">Agents Go to Work</div>
+        <p class="step-desc">Carl, Mike, Penny, Sherlock, Rosa, and Eva run your operations 24/7. They don't need briefing. They already know everything about your business.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINANCIAL IMPACT ═══ -->
+<section id="roi" class="section">
+  <div class="container">
+    <div class="roi-header reveal">
+      <span class="label">Financial Impact</span>
+      <h2 class="roi-h2">The numbers<br><span>don't lie.</span></h2>
+      <p class="roi-sub">Hiring a team to do what your six AI agents do would cost over £200,000 a year. That's before tax, benefits, sick days, and turnover.</p>
+    </div>
+
+    <div class="roi-hero-num reveal">
+      <div class="roi-hero-value">£200,000+</div>
+      <div class="roi-hero-label">Annual equivalent value of your AI team</div>
+      <div class="roi-hero-sub">Across salaries, agency fees, tools, and lost hours — this is what the full agent stack replaces</div>
+    </div>
+
+    <!-- Comparison: traditional vs AI -->
+    <div class="comparison reveal">
+      <div class="comp-col">
+        <div class="comp-head">
+          <span class="comp-head-icon">👥</span>
+          <div>
+            <div class="comp-head-title">Traditional Human Team</div>
+            <div class="comp-head-sub">Doing what your 6 agents do</div>
+          </div>
+        </div>
+        <div class="comp-row"><span class="comp-row-label">Customer Support Agent</span><span class="comp-row-val bad">£30,000/yr</span></div>
+        <div class="comp-row"><span class="comp-row-label">Social Media Manager</span><span class="comp-row-val bad">£32,000/yr</span></div>
+        <div class="comp-row"><span class="comp-row-label">Sales Development Rep</span><span class="comp-row-val bad">£35,000/yr</span></div>
+        <div class="comp-row"><span class="comp-row-label">SEO Agency Retainer</span><span class="comp-row-val bad">£24,000/yr</span></div>
+        <div class="comp-row"><span class="comp-row-label">Sales Agent (additional)</span><span class="comp-row-val bad">£42,000/yr</span></div>
+        <div class="comp-row"><span class="comp-row-label">Executive Assistant / Ops</span><span class="comp-row-val bad">£35,000/yr</span></div>
+        <div class="comp-row" style="background:rgba(255,82,82,.06);"><span class="comp-row-label" style="font-weight:700;color:var(--text);">Total Annual Cost</span><span class="comp-row-val bad" style="font-size:1.5rem;">£198,000</span></div>
+      </div>
+      <div class="comp-col comp-ai">
+        <div class="comp-head">
+          <span class="comp-head-icon">🐒</span>
+          <div>
+            <div class="comp-head-title">Artificial Ignorance</div>
+            <div class="comp-head-sub">The complete AI infrastructure</div>
+          </div>
+        </div>
+        <div class="comp-row"><span class="comp-row-label">Carl — 24/7 Customer Support</span><span class="comp-row-val good">✓ Included</span></div>
+        <div class="comp-row"><span class="comp-row-label">Mike — Social Media Manager</span><span class="comp-row-val good">✓ Included</span></div>
+        <div class="comp-row"><span class="comp-row-label">Penny — Lead Generation</span><span class="comp-row-val good">✓ Included</span></div>
+        <div class="comp-row"><span class="comp-row-label">Sherlock — SEO &amp; GEO</span><span class="comp-row-val good">✓ Included</span></div>
+        <div class="comp-row"><span class="comp-row-label">Rosa — Sales Agent</span><span class="comp-row-val good">✓ Included</span></div>
+        <div class="comp-row"><span class="comp-row-label">Eva — Personal Assistant + Brain</span><span class="comp-row-val good">✓ Included</span></div>
+        <div class="comp-row" style="background:rgba(0,200,83,.08);"><span class="comp-row-label" style="font-weight:700;color:var(--text);">Talk to us about pricing</span><span class="comp-row-val good" style="font-size:1.5rem;">Book a Demo →</span></div>
+      </div>
+    </div>
+
+    <!-- Per-agent savings cards -->
+    <div class="savings-grid reveal">
+      <div class="savings-card" style="--sc-color:var(--eva-color);">
+        <div class="savings-agent">
+          <img src="brand/EVA.png" alt="Eva" class="savings-thumb">
+          <div><div class="savings-name">Eva</div><div class="savings-role">Personal Assistant</div></div>
+        </div>
+        <div class="savings-amount">£50k+</div>
+        <div class="savings-period">Annual value delivered</div>
+        <div class="savings-facts">
+          <div class="savings-fact">20+ executive hours saved per week</div>
+          <div class="savings-fact">Coordinates all 5 other agents</div>
+          <div class="savings-fact">Daily business intelligence briefings</div>
+        </div>
+      </div>
+
+      <div class="savings-card" style="--sc-color:var(--carl-color);">
+        <div class="savings-agent">
+          <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_17_30.png" alt="Carl" class="savings-thumb">
+          <div><div class="savings-name">Carl</div><div class="savings-role">Customer Support</div></div>
+        </div>
+        <div class="savings-amount">£30k+</div>
+        <div class="savings-period">Saved vs a support hire</div>
+        <div class="savings-facts">
+          <div class="savings-fact">3-second response time, 24/7</div>
+          <div class="savings-fact">Cost per ticket drops from £8 to £0.08</div>
+          <div class="savings-fact">8,760 hours available per year</div>
+        </div>
+      </div>
+
+      <div class="savings-card" style="--sc-color:var(--mike-color);">
+        <div class="savings-agent">
+          <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_21_09.png" alt="Mike" class="savings-thumb">
+          <div><div class="savings-name">Mike</div><div class="savings-role">Social Media</div></div>
+        </div>
+        <div class="savings-amount">£32k+</div>
+        <div class="savings-period">Saved vs a social manager</div>
+        <div class="savings-facts">
+          <div class="savings-fact">15+ hours saved per week</div>
+          <div class="savings-fact">Average 40% engagement uplift</div>
+          <div class="savings-fact">Daily posting across all platforms</div>
+        </div>
+      </div>
+
+      <div class="savings-card" style="--sc-color:var(--penny-color);">
+        <div class="savings-agent">
+          <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_13_36.png" alt="Penny" class="savings-thumb">
+          <div><div class="savings-name">Penny</div><div class="savings-role">Lead Generation</div></div>
+        </div>
+        <div class="savings-amount">£35k+</div>
+        <div class="savings-period">Saved vs an SDR hire</div>
+        <div class="savings-facts">
+          <div class="savings-fact">3× more outreach volume</div>
+          <div class="savings-fact">5× higher reply rates</div>
+          <div class="savings-fact">Never misses a follow-up</div>
+        </div>
+      </div>
+
+      <div class="savings-card" style="--sc-color:var(--sherlock-color);">
+        <div class="savings-agent">
+          <img src="brand/ChatGPT%20Image%2024%20mar%202026%2C%2005_23_15.png" alt="Sherlock" class="savings-thumb">
+          <div><div class="savings-name">Sherlock</div><div class="savings-role">SEO &amp; GEO</div></div>
+        </div>
+        <div class="savings-amount">£36k+</div>
+        <div class="savings-period">Saved vs an SEO agency</div>
+        <div class="savings-facts">
+          <div class="savings-fact">Compounds organic traffic over time</div>
+          <div class="savings-fact">GEO for AI search engines</div>
+          <div class="savings-fact">Every article = permanent sales asset</div>
+        </div>
+      </div>
+
+      <div class="savings-card" style="--sc-color:var(--rosa-color);">
+        <div class="savings-agent">
+          <img src="brand/ChatGPT%20Image%202%20apr%202026%2C%2009_05_59.png" alt="Rosa" class="savings-thumb">
+          <div><div class="savings-name">Rosa</div><div class="savings-role">Sales Agent</div></div>
+        </div>
+        <div class="savings-amount">£40k+</div>
+        <div class="savings-period">Saved vs an additional sales hire</div>
+        <div class="savings-facts">
+          <div class="savings-fact">7× higher conversion from instant response</div>
+          <div class="savings-fact">Sales 24/7 — deals close while you sleep</div>
+          <div class="savings-fact">30% shorter sales cycle</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ MODULES ═══ -->
+<section id="modules" class="section">
+  <div class="container">
+    <div class="modules-header reveal">
+      <span class="label">Modular Infrastructure</span>
+      <h2 class="modules-h2">Buy what you need.<br>Scale when you're ready.</h2>
+      <p class="modules-sub">Start with one module. Add more as your business grows. Every piece plugs into the same AI brain.</p>
+    </div>
+    <div class="modules-grid reveal">
+      <div class="mod-card" onclick="toggleMod(this)">
+        <div class="mod-check">✓</div>
+        <span class="mod-icon">🎙️</span>
+        <div class="mod-name">AI Voice</div>
+        <div class="mod-desc">Intelligent voice AI that captures knowledge from every call. Powered by ElevenLabs, Knotie.AI &amp; RetellAI.</div>
+        <span class="mod-tag">Foundation Layer</span>
+      </div>
+      <div class="mod-card" onclick="toggleMod(this)">
+        <div class="mod-check">✓</div>
+        <span class="mod-icon">📊</span>
+        <div class="mod-name">CRM Integration</div>
+        <div class="mod-desc">Connects your email, contacts, and social media into the central knowledge base. Everything in sync.</div>
+        <span class="mod-tag">Data Layer</span>
+      </div>
+      <div class="mod-card" onclick="toggleMod(this)">
+        <div class="mod-check">✓</div>
+        <span class="mod-icon">🧠</span>
+        <div class="mod-name">RAG Brain</div>
+        <div class="mod-desc">The core AI memory system. Processes all your data into a searchable, compounding knowledge base.</div>
+        <span class="mod-tag">Intelligence Layer</span>
+      </div>
+      <div class="mod-card" onclick="toggleMod(this)">
+        <div class="mod-check">✓</div>
+        <span class="mod-icon">🐒</span>
+        <div class="mod-name">Individual Agents</div>
+        <div class="mod-desc">Pick your monkeys. Carl, Mike, Penny, Sherlock, Rosa, or Eva — add the agents you need, when you need them.</div>
+        <span class="mod-tag">Agent Layer</span>
+      </div>
+      <div class="mod-card active" onclick="toggleMod(this)">
+        <div class="mod-check" style="opacity:1;transform:scale(1);">✓</div>
+        <span class="mod-icon">🚀</span>
+        <div class="mod-name">Full Stack</div>
+        <div class="mod-desc">The complete AI infrastructure. Voice + CRM + Brain + all 6 Agents. Built, deployed, and managed for you.</div>
+        <span class="mod-tag">⭐ Most Popular</span>
+      </div>
+    </div>
+    <div class="modules-cta reveal">
+      <p>Not sure where to start? Let's build the right stack for your business.</p>
+      <a href="#contact" class="btn btn-primary">Get a Custom Build →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SOCIAL PROOF ═══ -->
+<section id="proof" class="section">
+  <div class="container">
+    <div class="proof-head reveal">
+      <span class="label">Social Proof</span>
+      <h2 class="proof-h2">80+ companies running on<br><span>Artificial Ignorance</span></h2>
+    </div>
+    <div class="proof-stats reveal">
+      <div class="proof-stat"><div class="proof-stat-num" data-count="80">0</div><div class="proof-stat-label">Active Clients</div></div>
+      <div class="proof-stat"><div class="proof-stat-num">6</div><div class="proof-stat-label">AI Specialists</div></div>
+      <div class="proof-stat"><div class="proof-stat-num">24/7</div><div class="proof-stat-label">Always Running</div></div>
+      <div class="proof-stat"><div class="proof-stat-num">100%</div><div class="proof-stat-label">White-Label Ready</div></div>
+    </div>
+    <div class="testimonials reveal">
+      <div class="testimonial">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-quote">"We replaced our entire admin team's repetitive workload in 3 weeks. The AI brain knows our business better than some of our staff. Genuinely impressive infrastructure."</p>
+        <div class="t-author"><div class="t-avatar">🐒</div><div><div class="t-name">Sarah K.</div><div class="t-title">CEO, Real Estate Agency</div></div></div>
+      </div>
+      <div class="testimonial">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-quote">"The RAG system is the game changer. Our agents answer questions with the full context of our 5-year client history. Nothing else comes close to what Artificial Ignorance has built."</p>
+        <div class="t-author"><div class="t-avatar">🐒</div><div><div class="t-name">Marcus T.</div><div class="t-title">Founder, Digital Marketing Agency</div></div></div>
+      </div>
+      <div class="testimonial">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-quote">"We white-label the full stack for our clients. Artificial Ignorance is the infrastructure we'd been looking for. Our clients think we built it ourselves — that's how seamless it is."</p>
+        <div class="t-author"><div class="t-avatar">🐒</div><div><div class="t-name">James O.</div><div class="t-title">Director, SaaS Agency</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="reveal">
+        <span class="label">Book a Demo</span>
+        <h2 class="contact-h2">Ready to give your<br>business a <span>real brain?</span></h2>
+        <p class="contact-desc">Tell us about your business and we'll show you exactly which modules you need. No fluff, no hard sell — just a straight conversation about what AI infrastructure can genuinely do for you.</p>
+        <div class="contact-perks">
+          <div class="perk"><div class="perk-icon"><img src="brand/3.png" alt=""></div>30-minute discovery call — no commitment</div>
+          <div class="perk"><div class="perk-icon"><img src="brand/1.png" alt=""></div>Custom infrastructure recommendation</div>
+          <div class="perk"><div class="perk-icon"><img src="brand/2.png" alt=""></div>White-label options for agencies</div>
+          <div class="perk"><div class="perk-icon"><img src="brand/4.png" alt=""></div>Live demo of the AI brain in action</div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="ghl-wrap">
+          <!-- GHL FORM EMBED CODE HERE -->
+          <div class="ghl-placeholder">
+            <span class="ph-icon">🐒</span>
+            <div class="ph-title">Book Your Demo</div>
+            <p class="ph-desc">Paste your GoHighLevel<br>form embed code here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#hero" class="footer-logo"><img src="brand/Vector.png" alt="Artificial Ignorance"></a>
+  <p class="footer-copy">© 2025 Artificial Ignorance. AI infrastructure for businesses that mean it.</p>
+  <ul class="footer-links">
+    <li><a href="#agents">The Monkeys</a></li>
+    <li><a href="#playbook">How They Work</a></li>
+    <li><a href="#roi">ROI</a></li>
+    <li><a href="#modules">Modules</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  /* ── Nav scroll ── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40), {passive:true});
+
+  /* ── Mobile menu ── */
+  function openMobileMenu()  { document.getElementById('mobileMenu').classList.add('open'); }
+  function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+  /* ── Reveal on scroll ── */
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const siblings = Array.from(entry.target.parentElement.querySelectorAll('.reveal'));
+      const idx = siblings.indexOf(entry.target);
+      entry.target.style.transitionDelay = `${idx * 0.07}s`;
+      entry.target.classList.add('visible');
+      revealObs.unobserve(entry.target);
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  /* ── Counter animation ── */
+  const countObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target, target = parseInt(el.dataset.count);
+      let cur = 0;
+      const step = target / 55;
+      const t = setInterval(() => {
+        cur += step;
+        if (cur >= target) { el.textContent = target + '+'; clearInterval(t); }
+        else el.textContent = Math.floor(cur) + '+';
+      }, 18);
+      countObs.unobserve(el);
+    });
+  }, {threshold:.5});
+  document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+
+  /* ── Module toggle ── */
+  function toggleMod(card) { card.classList.toggle('active'); }
+
+  /* ── Playbook tabs ── */
+  document.querySelectorAll('.ptab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ptab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.ptab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = document.getElementById(btn.dataset.target);
+      panel.classList.add('active');
+      // re-trigger reveal animations for newly shown panel
+      panel.querySelectorAll('.reveal').forEach(el => {
+        el.classList.remove('visible');
+        el.style.transitionDelay = '0s';
+        setTimeout(() => {
+          el.classList.add('visible');
+        }, 50);
+      });
+    });
+  });
+
+  /* ── Canvas neural network ── */
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let nodes = [];
+
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    initNodes();
+  }
+
+  function initNodes() {
+    const count = Math.min(Math.floor((canvas.width * canvas.height) / 13000), 80);
+    nodes = Array.from({length: count}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - .5) * .35,
+      vy: (Math.random() - .5) * .35,
+      r:  Math.random() * 1.8 + .8,
+      ph: Math.random() * Math.PI * 2,
+    }));
+  }
+
+  function drawFrame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 160) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(0,200,83,${(1 - dist/160) * .22})`;
+          ctx.lineWidth = .6;
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    nodes.forEach(n => {
+      n.ph += .018;
+      const g = (Math.sin(n.ph) + 1) / 2;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,200,83,${.25 + g * .55})`;
+      ctx.fill();
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > canvas.width)  n.vx *= -1;
+      if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+    });
+    requestAnimationFrame(drawFrame);
+  }
+
+  resize();
+  drawFrame();
+  window.addEventListener('resize', resize, {passive:true});
+
+  /* ── Smooth scroll ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (!t) return;
+      e.preventDefault();
+      t.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+</script>
+</body>
+</html>

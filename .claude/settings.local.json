@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.marblism.com)",
+      "WebSearch",
+      "WebFetch(domain:grothindustries.com)",
+      "WebFetch(domain:aitools.inc)",
+      "WebFetch(domain:quiccle.com)"
+    ]
+  }
+}
